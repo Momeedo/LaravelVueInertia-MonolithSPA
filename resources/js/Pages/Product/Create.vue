@@ -15,8 +15,13 @@ const form = useForm({
     category_id: '',
     price: null,
     weight: null,
-    description: '',
+    description: ''
 })
+const store = () => {
+    form.post(route('products.store'), {
+        onSuccess: () => form.reset()
+    })
+}
 </script>
 
 <template>
@@ -63,7 +68,7 @@ const form = useForm({
                                             <option value="">Select a category</option>
                                             <option v-for="category in categories" :key="category.id"
                                                 :value="category.id">{{
-                                                category.name }}</option>
+                                                    category.name }}</option>
                                         </select>
                                     </div>
                                     <div class="col-span-6 sm:col-span-3">
