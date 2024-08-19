@@ -2,6 +2,7 @@
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
+import Sortable from '@/Components/Sortable.vue';
 
 const props = defineProps({
     products: {
@@ -72,16 +73,16 @@ const handleSearch = (event) => {
                                     #
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Product name
+                                    <Sortable label="Product name" name="name" />
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Category
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Price
+                                    <Sortable label="Price" name="price" />
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Weight
+                                    <Sortable label="Weight" name="weight" />
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Action
