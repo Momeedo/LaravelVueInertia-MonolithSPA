@@ -1,8 +1,11 @@
 <script setup>
+import { ref } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import Sortable from '@/Components/Sortable.vue';
+import Checkbox from '@/Components/Checkbox.vue';
+import CheckAll from '@/Components/CheckAll.vue';
 
 const props = defineProps({
     products: {
@@ -30,6 +33,8 @@ const handleSearch = (event) => {
         search: event.target.value
     })
 }
+
+const selectedIds = ref([])
 </script>
 
 <template>
@@ -48,6 +53,7 @@ const handleSearch = (event) => {
 
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
+                {{ selectedIds }}
                 <div
                     class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-end pb-6">
                     <div class="relative">
@@ -69,6 +75,9 @@ const handleSearch = (event) => {
                     <table class="w-full text-sm text-left rtl:text-right text-gray-500">
                         <thead class="text-xs text-gray-700 uppercase bg-gray-50 border-b">
                             <tr>
+                                <th scope="col" class="px-6 py-3">
+                                    <CheckAll :rows="products.data" v-model="selectedIds" />
+                                </th>
                                 <th scope="col" class="px-6 py-3">
                                     #
                                 </th>
@@ -92,6 +101,9 @@ const handleSearch = (event) => {
                         <tbody>
                             <tr v-for="(product, index) in products.data" :key="product.id"
                                 class="bg-white border-b hover:bg-gray-50">
+                                <td class="px-6 py-4">
+                                    <Checkbox :value="product.id" v-model:checked="selectedIds"/>
+                                </td>
                                 <td class="px-6 py-4">
                                     {{ index + products.meta.from }}
                                 </td>
