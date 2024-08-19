@@ -19,10 +19,24 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Auth::user()->products()->latest()->paginate(10);
+        $products = Auth::user()
+            ->products()
+            ->latest()
+            ->with('category')
+            ->where(function ($query) {
+                if ($search = request()->search) {
+                    $query->where('name', 'like', '%' . $search . '%')
+                        ->orWhereHas('category', function ($query) use ($search) {
+                            $query->where('name', 'like', '%' . $search . '%');
+                        });
+                }
+            })
+            ->paginate(10)
+            ->withQueryString();
 
         return Inertia::render('Product/Index', [
-            'products' => ProductResource::collection($products)
+            'products' => ProductResource::collection($products),
+            'query' => (object) request()->query()
         ]);
     }
 
@@ -73,7 +87,7 @@ class ProductController extends Controller
     {
         $product->update($request->validated());
 
-        return redirect()->route('products.show', $product->id)->with('message', 'Product has been updated successfully!');; 
+        return redirect()->route('products.show', $product->id)->with('message', 'Product has been updated successfully!');;
     }
 
     /**
