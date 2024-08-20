@@ -26,6 +26,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('/products', ProductController::class);
 
     Route::delete('/products/{ids}/bulk', [ProductController::class, 'bulkDestroy'])->name('products.bulk-destroy');
+    Route::patch('/products/bulk/update', [ProductController::class, 'bulkUpdate'])->name('products.bulk-update');
 });
 
 require __DIR__.'/auth.php';

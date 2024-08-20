@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\BulkUpdateProductRequest;
 use App\Models\Product;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
@@ -97,6 +98,18 @@ class ProductController extends Controller
         $product->update($request->validated());
 
         return redirect()->route('products.show', $product->id)->with('message', 'Product has been updated successfully!');;
+    }
+
+
+    public function bulkUpdate(BulkUpdateProductRequest $request)
+    {
+        // dd($request->validated());
+
+        Product::whereIn('id', $request->product_ids)->update([
+            'category_id' => $request->category_id
+        ]);
+
+        return redirect()->route('products.index')->with('message', 'Products has been updated successfully!');;
     }
 
     /**

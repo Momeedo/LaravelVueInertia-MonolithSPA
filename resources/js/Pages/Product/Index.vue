@@ -164,6 +164,6 @@ const selectedProducts = computed(() => {
                 </div>
             </div>
         </div>
-        <BulkEdit :show="showModal" @close="showModal = false" :products="selectedProducts" :categories="categories" />
+        <BulkEdit :show="showModal" @close="showModal = false" @updated="selectedIds = []" :products="selectedProducts" :categories="categories" />
     </AuthenticatedLayout>
 </template>
