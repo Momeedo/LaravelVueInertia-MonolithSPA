@@ -1,15 +1,20 @@
 <script setup>
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout.vue';
 import Pagination from '@/Components/Pagination.vue';
 import { Head, Link, router } from '@inertiajs/vue3';
 import Sortable from '@/Components/Sortable.vue';
 import Checkbox from '@/Components/Checkbox.vue';
 import CheckAll from '@/Components/CheckAll.vue';
+import BulkEdit from './BulkEdit.vue';
 
 const props = defineProps({
     products: {
         type: Object,
+        required: true
+    },
+    categories: {
+        type: Array,
         required: true
     },
     query: {
@@ -43,6 +48,13 @@ const deleteSelected = () => {
         })
     }
 }
+
+const showModal = ref(false)
+const selectedProducts = computed(() => {
+    return props.products.data
+        .filter((product) => selectedIds.value.includes(product.id))
+        .map((product) => ({ id: product.id, name: product.name }))
+})
 </script>
 
 <template>
@@ -61,11 +73,18 @@ const deleteSelected = () => {
 
         <div class="py-6">
             <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
-                <div class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-6">
-                    <button type="button" class="px-3 py-2.5 text-sm font-medium text-center text-white rounded-md"
-                        :class="{ 'bg-red-300 cursor-not-allowed': !selectedIds.length, 'bg-red-500': selectedIds.length }"
-                        :disabled="!selectedIds.length" @click="deleteSelected">
-                        Delete</button>
+                <div
+                    class="flex flex-column sm:flex-row flex-wrap space-y-4 sm:space-y-0 items-center justify-between pb-6">
+                    <div class="space-x-3">
+                        <button type="button" class="px-3 py-2.5 text-sm font-medium text-center text-white rounded-md"
+                            :class="{ 'bg-red-300 cursor-not-allowed': !selectedIds.length, 'bg-red-500': selectedIds.length }"
+                            :disabled="!selectedIds.length" @click="deleteSelected">
+                            Delete</button>
+                        <button type="button" class="px-3 py-2.5 text-sm font-medium text-center text-white rounded-md"
+                            :class="{ 'bg-blue-300 cursor-not-allowed': !selectedIds.length, 'bg-blue-500': selectedIds.length }"
+                            :disabled="!selectedIds.length" @click="showModal = true">
+                            Edit</button>
+                    </div>
                     <div class="relative">
                         <div
                             class="absolute inset-y-0 left-0 rtl:inset-r-0 rtl:right-0 flex items-center ps-3 pointer-events-none">
@@ -145,5 +164,6 @@ const deleteSelected = () => {
                 </div>
             </div>
         </div>
+        <BulkEdit :show="showModal" @close="showModal = false" :products="selectedProducts" :categories="categories" />
     </AuthenticatedLayout>
 </template>
